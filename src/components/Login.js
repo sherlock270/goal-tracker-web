@@ -20,13 +20,23 @@ class Login extends React.Component {
   submitHandler(e) {
     e.preventDefault();
 
-    console.log("submitted");
+    const type = e.target.name;
+
+    axios
+      .post(`http://localhost:8000/${type}`, {
+        username: this.state.username,
+        password: this.state.password
+      })
+      .then(res => {
+        console.log(res.data.message);
+      })
+      .catch(err => console.error(err));
   }
 
   render() {
     return (
       <div className="login-container">
-        <form onSubmit={this.submitHandler}>
+        <form>
           <label>
             Username:
             <input
@@ -45,8 +55,26 @@ class Login extends React.Component {
               onChange={this.changeHandler}
             />
           </label>
-          <button type="submit">Submit</button>
+          <button type="button" name="login" onClick={this.submitHandler}>
+            Log In
+          </button>
+          <button type="button" name="signup" onClick={this.submitHandler}>
+            Sign Up
+          </button>
         </form>
+        <button
+          type="button"
+          onClick={e => {
+            axios
+              .get("http://localhost:8000/users")
+              .then(res => {
+                console.log(res.data.users);
+              })
+              .catch(err => console.error(err));
+          }}
+        >
+          Log users
+        </button>
       </div>
     );
   }
